@@ -1,33 +1,36 @@
-# Terraform Azure Anti-Fraud Policy Module
+# About this Automation
 
-This Terraform code deploys an Azure policy definition and assignment to enforce tagging while creating a Resource Group.
-This policy will be assigned to a specific Azure subscription.
-
-## Usage
-
-1. Install Terraform (version 0.13 or later) and configure your Azure credentials.
-2. Clone this repository and navigate to the root directory.
-3. Run terraform init to initialize the provider and modules.
-4. Customize the variables in variables.tf as needed.
-5. Run terraform apply to create or update the Azure resources.
+Apply a tag policy that applies to all resource built in your environment.
 
 
-## Inputs
+## Fields and Best Practices
 
-| Name              | Description                                                          | Type   | Default                                                           | Required |
-|-------------------|----------------------------------------------------------------------|--------|-------------------------------------------------------------------|----------|
-| policy_name       | Name of the policy definition                                        | string | "tagging-policy"                                               | yes      |
-| scope             | Subscription, where you want to apply the policy                     | string | n/a                                                              | yes      |
-| display_name      | Display name of the policy definition                                | string | "Tagging Policy"                                               | yes      |
-| description       | Description of the policy definition                                 | string | "This policy prevents anyone to create resource groups without tags." | yes      |
-| policy_mode       | Mode of the policy definition                                        | string | "All"                                                             | yes      |
-| Subscription      | Subscription that the policy is going to be applied                  | string | n/a                                                              | yes      |
+| Field         | Best practice and Options      | Limitations |
+| ------------- | --------------------------------- |-|
+| **Request title**       | A friendly short name to remind you why you created this account         | 256 characters|
+| **Request description**        | Add more details on the need for the account          |256 characters |
+| **Azure subscription ID** | Select your target Subscription ID | NA |
+| **List of Mandatory tags** | Tag Name  | Refer to the **Tagging Limitations** section below |
 
 
-## Example
+### Tagging best practies
 
-terraform plan -var 'scope="/subscriptions/****************************"'
-terraform apply -var 'scope="/subscriptions/*****************************"'
-terraform destroy -var 'scope="/subscriptions/******************************"'
+[Microsoft Tagging best practices](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/naming-and-tagging)
+
+### Tagging limitations
+
+The following limitations apply to tags:
+
+Not all resource types support tags. To determine if you can apply a tag to a resource type, see Tag support for Azure resources.
+
+Each resource, resource group, and subscription can have a maximum of 50 tag name-value pairs. If you need to apply more tags than the maximum allowed number, use a JSON string for the tag value. The JSON string can contain many of the values that you apply to a single tag name. A resource group or subscription can contain many resources that each have 50 tag name-value pairs.
+
+The tag name has a limit of 512 characters and the tag value has a limit of 256 characters. For storage accounts, the tag name has a limit of 128 characters and the tag value has a limit of 256 characters.
+
+Classic resources such as Cloud Services don't support tags.
+
+Azure IP Groups and Azure Firewall Policies don't support PATCH operations. PATCH API method operations, therefore, can't update tags through the portal. Instead, you can use the update commands for those resources. You can update tags for an IP group, for example, with the az network ip-group update command.
+
+Tag names can't contain these characters: <, >, %, &, \, ?, /
 
 
